@@ -154,7 +154,7 @@ public class BubbleView extends View {
         circle.y = measuredHeight;
         Log.e(MOOSE, "height=" + measuredHeight + " width=" + measuredWidth);
     }
-    
+
     private class Circle {
         int x = 0;
         int y = 0;

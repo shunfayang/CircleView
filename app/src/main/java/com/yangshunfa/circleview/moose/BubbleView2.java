@@ -19,7 +19,7 @@ import java.util.Random;
 
 /**
  * Created by yangshunfa on 2017/5/5.
- * tips:
+ * tips:使用 线程 实现自底部向上的模仿水泡的动画
  */
 
 public class BubbleView2 extends View {
@@ -68,6 +68,7 @@ public class BubbleView2 extends View {
             public void run() {
                 int size = mBubbles.size();
 
+                // 初始化所有圆形的初始位置
                 for (int i=0;i<mBubbles.size();i++){
                     mBubbles.get(i).y += (i * (measuredHeight/4));
                     mBubbles.get(i).x = measuredWidth /2;
@@ -76,8 +77,10 @@ public class BubbleView2 extends View {
                     int i = 0;
                     for (; i< size;i++){
                         Bubble bubble = mBubbles.get(i);
+                        // y 递增
                         bubble.y-=2;
                         if (bubble.y <=100){
+                            // y达到动画尾部，重置y和底部出发点、振幅、缩放scale
                             bubble.y = measuredHeight - 1;
                             bubble.bottomUp = mRandom.nextInt(measuredWidth / 4) + measuredHeight / 4;// 底部出发点
                             bubble.amplitude = ((mRandom.nextInt(100) + 10) / 10) * 10;
