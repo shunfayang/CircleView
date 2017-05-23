@@ -86,11 +86,12 @@ public class BubbleView3 extends View {
     }
 
     private void startAnimation() {
-        int count = 4;
-        Bubble endBubble = bubbleFactory.blowBubble();
-//        List<Bubble> bubbles = bubbleFactory.blowBubbles(count);
+        int count = 10;// 个数
+        // 结束位置
+        final Bubble endBubble = bubbleFactory.blowBubble();
         endBubble.x = measuredWidth / 2;
         endBubble.y = 0;
+
         bubblesMap = new HashMap<>(count);
         int i = 0;
         for (;i<count;i++) {
@@ -101,13 +102,17 @@ public class BubbleView3 extends View {
                 public void onAnimationUpdate(ValueAnimator animation) {
                     Bubble animatedValue = (Bubble) animation.getAnimatedValue();
                     bubblesMap.put(animation, animatedValue);
-                    Log.e(MOOSE, "x：" + animatedValue.x + " y=" + animatedValue.y);
                     invalidate();
                 }
             });
             animator.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationRepeat(Animator animation) {
+                    ValueAnimator animator = (ValueAnimator) animation;
+                    Bubble startBubble = bubbleFactory.blowBubble();
+//                    startBubble.y = measuredHeight;
+                    animator.setObjectValues(startBubble, endBubble);
+                    bubblesMap.put(animation, startBubble);
                     animation.setDuration((mRandom.nextInt(5) + 5) * 1000);
                 }
             });
@@ -130,6 +135,7 @@ public class BubbleView3 extends View {
             public void onAnimationUpdate(ValueAnimator animation) {
 //                mBubbles = (List<Bubble>) animation.getAnimatedValue();
                 mCurrentValue = (PointF) animation.getAnimatedValue();
+                bubblesMap.put(animation, bubbleFactory.blowBubble());
                 invalidate();
             }
         });
@@ -169,11 +175,20 @@ public class BubbleView3 extends View {
         int bottomUp = 0;//底部起来位置
         float scale = 1;// 缩放比例
         int inversalHeight = 0;
+
+        public String toString1() {
+            return "Bubble{" +
+                    "x=" + x +
+                    ", y=" + y +
+                    ", amplitude=" + amplitude +
+                    ", bottomUp=" + bottomUp +
+                    '}';
+        }
     }
 
     private class BubbleFactory {
 
-        int MAX_BUBBLE_COUNT = 2;
+        int MAX_BUBBLE_COUNT = 4;
 
         public List<BubbleView3.Bubble> blowBubbles(int count) {
             List<BubbleView3.Bubble> bubbles = new ArrayList<>(count);
@@ -186,11 +201,12 @@ public class BubbleView3 extends View {
 
         private BubbleView3.Bubble blowBubble() {
             BubbleView3.Bubble bubble = new BubbleView3.Bubble();
-            bubble.y = measuredHeight + mRandom.nextInt(100) + 50;
 //            bubble.y = measuredHeight + mRandom.nextInt(100) + 50;
             bubble.x = measuredWidth / 2;
             int i = measuredWidth / 3;
             bubble.bottomUp = i + mRandom.nextInt(i);
+            bubble.amplitude = mRandom.nextDouble() * 100 ;
+            bubble.y = measuredHeight;
 //            bubble.y = measuredHeight + (measuredHeight/4) * (mRandom.nextInt(2) + 1);
             return bubble;
         }
@@ -199,19 +215,22 @@ public class BubbleView3 extends View {
     private class SinEvaluator implements TypeEvaluator {
 
         @Override
-        public Bubble evaluate(float fraction, Object lists, Object endValue) {
-            Bubble startValue = (Bubble) lists;
-            Bubble endPoint = (Bubble) endValue;
+        public Bubble evaluate(float fraction, Object startBubble, Object endBubble) {
+            Bubble startPoint = (Bubble) startBubble;
+            Bubble endPoint = (Bubble) endBubble;
             // 只需要y的差值
-            float diffY = endPoint.y - startValue.y;
-            float y = startValue.y + diffY * fraction;
-            float x = (float) ((float) Math.sin(y * Math.PI / 180)  * startValue.amplitude + startValue.bottomUp);
+            float diffY = endPoint.y - startPoint.y;
+            float y = startPoint.y + diffY * fraction;
+            float x = (float) ((float) Math.sin(y * Math.PI / 180)  * startPoint.amplitude + startPoint.bottomUp);
+//            float x = (float) ((float) Math.sin(y * Math.PI / 180)  * startValue.amplitude + startValue.bottomUp);
 //            startValue.x = (int) x;
 //            startValue.y = (int) y;
             Bubble bubble = bubbleFactory.blowBubble();
             bubble.x = (int) x;
             bubble.y = (int) y;
-
+            bubble.bottomUp = startPoint.bottomUp;
+            bubble.amplitude = startPoint.amplitude;
+            bubble.scale = startPoint.scale;
             return bubble;
         }
     }
