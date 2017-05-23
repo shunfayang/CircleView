@@ -86,7 +86,7 @@ public class BubbleView3 extends View {
     }
 
     private void startAnimation() {
-        int count = 10;// 个数
+        int count = 5;// 个数
         // 结束位置
         final Bubble endBubble = bubbleFactory.blowBubble();
         endBubble.x = measuredWidth / 2;

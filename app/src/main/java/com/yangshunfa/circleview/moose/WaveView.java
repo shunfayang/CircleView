@@ -1,5 +1,7 @@
 package com.yangshunfa.circleview.moose;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.TimeInterpolator;
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
@@ -12,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.BounceInterpolator;
 import android.view.animation.LinearInterpolator;
 
 import java.util.Random;
@@ -29,6 +30,7 @@ public class WaveView extends View {
     private int measuredWidth = 0;
     private float mFraction;
     private int scale;
+    private Random mRandom;
 
     public WaveView(Context context) {
         super(context);
@@ -60,11 +62,11 @@ public class WaveView extends View {
             float y = 50;
             path.moveTo(0, 50);
 
-            float amplitude = mFraction * 15;// 振幅
+            float amplitude = mFraction * 20;// 振幅
             float offset = mFraction * 10 * (scale);
             float height = mFraction * 100;
             for (;i<measuredWidth;i++){
-                y = (float) ((float) (15) * Math.sin((i * 0.5) * Math.PI / 180 + offset) + 190) ;
+                y = (float) ((float) (amplitude) * Math.sin((i * 0.5) * Math.PI / 180 + offset) + 190) ;
                 path.lineTo(i, y);
 //                path.quadTo(i, y,i+1,y);
             }
@@ -93,11 +95,17 @@ public class WaveView extends View {
                 invalidate();
             }
         });
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
         TimeInterpolator value = new LinearInterpolator();
         animator.setInterpolator(value);
         animator.setRepeatCount(ValueAnimator.INFINITE);
-        animator.setRepeatMode(ValueAnimator.RESTART);
-        animator.setDuration(2000);
+        animator.setRepeatMode(ValueAnimator.REVERSE);
+        animator.setDuration(4000);
         animator.start();
     }
 
@@ -117,6 +125,7 @@ public class WaveView extends View {
         mPaint.setColor(Color.parseColor(mColor));
 //        mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setAntiAlias(true);
+        mRandom = new Random();
 //        mPaint.
 
     }

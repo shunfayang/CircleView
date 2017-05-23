@@ -13,5 +13,8 @@
         android:id="@+id/waveview2"
         android:layout_width="match_parent"
         android:layout_height="200dp" />
+    <com.yangshunfa.circleview.moose.BubbleView2
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
 
 </RelativeLayout>
