@@ -1,5 +1,6 @@
 package com.yangshunfa.circleview.moose;
 
+import android.animation.TimeInterpolator;
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -11,6 +12,10 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.LinearInterpolator;
+
+import java.util.Random;
 
 /**
  * Created by yangshunfa on 2017/5/23.
@@ -23,6 +28,7 @@ public class WaveView extends View {
     private int measuredHeight = 0;
     private int measuredWidth = 0;
     private float mFraction;
+    private int scale;
 
     public WaveView(Context context) {
         super(context);
@@ -46,6 +52,7 @@ public class WaveView extends View {
             measuredHeight = getMeasuredHeight();
             measuredWidth = getMeasuredWidth();
             startAnim();
+            scale = new Random().nextInt(2) + 1;
         } else {
             Path path = new Path();
             int i = 1;
@@ -54,9 +61,10 @@ public class WaveView extends View {
             path.moveTo(0, 50);
 
             float amplitude = mFraction * 15;// 振幅
-            float offset = mFraction * 10;
+            float offset = mFraction * 10 * (scale);
+            float height = mFraction * 100;
             for (;i<measuredWidth;i++){
-                y = (float) ((float) (15) * Math.sin((i * 0.5) * Math.PI / 180 + offset) + mFraction * 100) ;
+                y = (float) ((float) (15) * Math.sin((i * 0.5) * Math.PI / 180 + offset) + 190) ;
                 path.lineTo(i, y);
 //                path.quadTo(i, y,i+1,y);
             }
@@ -75,28 +83,7 @@ public class WaveView extends View {
         canvas.save();
         canvas.restore();
     }
-    private void setPath(Path path){
-//        int x = 0;
-//        int y = 0;
-//        //每次进来都把path重置一下
-//        path.reset();
-//        for (int i = 0; i < measuredWidth; i++) {
-//            x = i;
-//            y = (int) (a * Math.sin((i * w + fai) * Math.PI / 180) + k);
-//            if (i == 0) {
-//                //x=0的时候，即左上角的点，移动画笔于此
-//                path.moveTo(x, y);
-//            }
-//            //用每个x求得每个y，用quadTo方法连接成一条贝塞尔曲线
-//            path.quadTo(x, y, x + 1, y);
-//        }
-//        //最后连接到右下角底部
-//        path.lineTo(measuredWidth, measuredHeight);
-//        //连接到左下角底部
-//        path.lineTo(0, measuredHeight);
-//        //起点在左上角，这个时候可以封闭路径了，封闭。
-//        path.close();
-    }
+
     private void startAnim() {
         ValueAnimator animator = ValueAnimator.ofObject(new SinEvaluator(), 0, 100);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -106,16 +93,28 @@ public class WaveView extends View {
                 invalidate();
             }
         });
+        TimeInterpolator value = new LinearInterpolator();
+        animator.setInterpolator(value);
         animator.setRepeatCount(ValueAnimator.INFINITE);
-        animator.setRepeatMode(ValueAnimator.REVERSE);
+        animator.setRepeatMode(ValueAnimator.RESTART);
         animator.setDuration(2000);
         animator.start();
     }
 
+    public String getmColor() {
+        return mColor;
+    }
+
+    public void setmColor(String mColor) {
+        this.mColor = mColor;
+        mPaint.setColor(Color.parseColor(mColor));
+    }
+
+    private String mColor = "#00aa90";
     private void init(Context context) {
         mPaint = new Paint();
         mPaint.setStrokeWidth(5);
-        mPaint.setColor(Color.BLUE);
+        mPaint.setColor(Color.parseColor(mColor));
 //        mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setAntiAlias(true);
 //        mPaint.
