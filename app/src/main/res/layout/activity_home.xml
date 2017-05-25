@@ -7,7 +7,6 @@
     android:fitsSystemWindows="true"
     tools:context="com.yangshunfa.circleview.HomeActivity">
     <com.yangshunfa.circleview.moose.WaveView
-        android:visibility="gone"
         android:id="@+id/waveview1"
         android:layout_width="match_parent"
         android:layout_height="200dp" />

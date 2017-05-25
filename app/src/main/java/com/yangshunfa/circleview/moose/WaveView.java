@@ -31,6 +31,7 @@ public class WaveView extends View {
     private float mFraction;
     private int scale;
     private Random mRandom;
+    private Fraction mFraction2;
 
     public WaveView(Context context) {
         super(context);
@@ -62,9 +63,12 @@ public class WaveView extends View {
             float y = 50;
             path.moveTo(0, 50);
 
-            float amplitude = mFraction * 20;// 振幅
-            float offset = mFraction * 10 * (scale);
-            float height = mFraction * 100;
+//            float amplitude = mFraction * 20;// 振幅:0~1~0
+//            float offset = mFraction * 10 * (scale);
+//            float height = mFraction * 100;
+            float amplitude = mFraction2.amplitude* 30;// 振幅:0~0.5~0
+            float offset = mFraction2.fraction * 10 * (scale);
+//            float height = mFraction2.fraction * 100;
             for (;i<measuredWidth;i++){
                 y = (float) ((float) (amplitude) * Math.sin((i * 0.5) * Math.PI / 180 + offset) + 190) ;
                 path.lineTo(i, y);
@@ -87,11 +91,12 @@ public class WaveView extends View {
     }
 
     private void startAnim() {
-        ValueAnimator animator = ValueAnimator.ofObject(new SinEvaluator(), 0, 100);
+        ValueAnimator animator = ValueAnimator.ofObject(new SinEvaluator(), 100, 0);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                mFraction = (float) animation.getAnimatedValue();
+//                mFraction = (float) animation.getAnimatedValue();
+                mFraction2 = (Fraction) animation.getAnimatedValue();
                 invalidate();
             }
         });
@@ -105,7 +110,7 @@ public class WaveView extends View {
         animator.setInterpolator(value);
         animator.setRepeatCount(ValueAnimator.INFINITE);
         animator.setRepeatMode(ValueAnimator.RESTART);
-        animator.setDuration(5000);
+        animator.setDuration(10000);
         animator.start();
     }
 
@@ -129,6 +134,16 @@ public class WaveView extends View {
 //        mPaint.
 
     }
+
+    private class Fraction {
+        public float fraction;
+        public float amplitude;
+
+        public Fraction(float fraction, float amplitude) {
+            this.fraction = fraction;
+            this.amplitude = amplitude;
+        }
+    }
     private class SinEvaluator implements TypeEvaluator{
 
         @Override
@@ -137,9 +152,15 @@ public class WaveView extends View {
             int end = (int) endValue;
             int diffY = end - start;
             float x = start + diffY * fraction;
-            float sin = (float) Math.sin(x * Math.PI / 90);
-            Log.e("moose1", "sin=" + sin);
-            return sin ;
+            float sin = (float) Math.sin(x * Math.PI / 180) ;
+            float v = -1 + fraction;
+            Log.e("moose1", "sin=" + fraction);
+            float amplitude = sin ;
+            if (sin > 0.5){
+                amplitude = 1 - sin;
+            }
+            return new Fraction(sin,amplitude);
+//            return sin;
         }
     }
 }
