@@ -11,6 +11,15 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        waveAndArcView();
+//        constrainLayoutView();
+    }
+
+    private void constrainLayoutView() {
+        setContentView(R.layout.activity_home2);
+    }
+
+    private void waveAndArcView() {
         setContentView(R.layout.activity_home);
         WaveView waveView1 = (WaveView) findViewById(R.id.waveview1);
         WaveView waveView2 = (WaveView) findViewById(R.id.waveview2);

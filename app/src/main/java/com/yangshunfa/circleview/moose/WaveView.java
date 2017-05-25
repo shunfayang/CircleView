@@ -104,8 +104,8 @@ public class WaveView extends View {
         TimeInterpolator value = new LinearInterpolator();
         animator.setInterpolator(value);
         animator.setRepeatCount(ValueAnimator.INFINITE);
-        animator.setRepeatMode(ValueAnimator.REVERSE);
-        animator.setDuration(4000);
+        animator.setRepeatMode(ValueAnimator.RESTART);
+        animator.setDuration(5000);
         animator.start();
     }
 
@@ -137,8 +137,9 @@ public class WaveView extends View {
             int end = (int) endValue;
             int diffY = end - start;
             float x = start + diffY * fraction;
-            Log.e("moose", "fraction=" + fraction);
-            return fraction ;
+            float sin = (float) Math.sin(x * Math.PI / 90);
+            Log.e("moose1", "sin=" + sin);
+            return sin ;
         }
     }
 }
