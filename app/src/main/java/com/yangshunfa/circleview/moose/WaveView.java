@@ -6,10 +6,17 @@ import android.animation.TimeInterpolator;
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ComposeShader;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.RadialGradient;
+import android.graphics.RectF;
+import android.graphics.Shader;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -32,6 +39,7 @@ public class WaveView extends View {
     private int scale;
     private Random mRandom;
     private Fraction mFraction2;
+    private Paint mPaint2;
 
     public WaveView(Context context) {
         super(context);
@@ -51,6 +59,8 @@ public class WaveView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        canvas.drawColor(Color.TRANSPARENT);
+        canvas.saveLayer(new RectF(0,0,measuredWidth, measuredHeight),null, Canvas.ALL_SAVE_FLAG);
         if (measuredHeight == 0 && measuredWidth == 0) {
             measuredHeight = getMeasuredHeight();
             measuredWidth = getMeasuredWidth();
@@ -68,15 +78,20 @@ public class WaveView extends View {
 //            float height = mFraction * 100;
             float amplitude = mFraction2.amplitude* 30;// 振幅:0~0.5~0
             float offset = mFraction2.fraction * 10 * (scale);
-//            float height = mFraction2.fraction * 100;
+            float height = mFraction2.fraction * 100;
             for (;i<measuredWidth;i++){
                 y = (float) ((float) (amplitude) * Math.sin((i * 0.5) * Math.PI / 180 + offset) + 190) ;
                 path.lineTo(i, y);
 //                path.quadTo(i, y,i+1,y);
             }
+//            ComposeShader shader = new ComposeShader()
+
             path.lineTo(measuredWidth, measuredHeight);
             path.lineTo(0, measuredHeight);
             path.close();
+            canvas.drawCircle(measuredWidth /2 ,measuredHeight /2,measuredHeight > measuredWidth? measuredWidth /2 : measuredHeight /2, mPaint2);
+            canvas.save();
+            mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
             canvas.drawPath(path, mPaint);
         }
 //        canvas.drawLine(0,measuredHeight,measuredWidth, measuredHeight, mPaint);
@@ -126,8 +141,10 @@ public class WaveView extends View {
     private String mColor = "#00aa90";
     private void init(Context context) {
         mPaint = new Paint();
+        mPaint2 = new Paint();
         mPaint.setStrokeWidth(5);
         mPaint.setColor(Color.parseColor(mColor));
+        mPaint2.setColor(Color.parseColor("#ffffff"));
 //        mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setAntiAlias(true);
         mRandom = new Random();

@@ -12,7 +12,12 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         waveAndArcView();
+//        porterModeView();
 //        constrainLayoutView();
+    }
+
+    private void porterModeView() {
+        setContentView(R.layout.activity_home4);
     }
 
     private void constrainLayoutView() {
