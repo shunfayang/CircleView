@@ -20,24 +20,24 @@ import java.util.Random;
  * tips:
  */
 
-public class PorterModeView extends View {
+public class PorterDuffXfermodeView extends View {
 
     private Paint mPaint;
     private int measuredWidth;
     private int measuredHeight;
     private Paint mPaint2;
 
-    public PorterModeView(Context context) {
+    public PorterDuffXfermodeView(Context context) {
         super(context);
         init(context);
     }
 
-    public PorterModeView(Context context, @Nullable AttributeSet attrs) {
+    public PorterDuffXfermodeView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public PorterModeView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public PorterDuffXfermodeView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }

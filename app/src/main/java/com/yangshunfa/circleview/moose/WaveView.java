@@ -91,6 +91,9 @@ public class WaveView extends View {
             path.close();
             canvas.drawCircle(measuredWidth /2 ,measuredHeight /2,measuredHeight > measuredWidth? measuredWidth /2 : measuredHeight /2, mPaint2);
             canvas.save();
+            // 由于PorterDuffXfermode模式需要两张图（bitmap或者canvas画）长宽一致，若不一致，
+            // 未重叠的部分会没有效果。切两张图画上去的做法太low，这里用了“保留圆形+重叠部分波浪”的模式，
+            // 即以圆形为Dst，使用ScrATop模式保留Src重叠部分。圆形中为重叠的部分设置为白色（transparent无效）。
             mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
             canvas.drawPath(path, mPaint);
         }
@@ -125,7 +128,7 @@ public class WaveView extends View {
         animator.setInterpolator(value);
         animator.setRepeatCount(ValueAnimator.INFINITE);
         animator.setRepeatMode(ValueAnimator.RESTART);
-        animator.setDuration(10000);
+        animator.setDuration(6000);
         animator.start();
     }
 
@@ -144,7 +147,7 @@ public class WaveView extends View {
         mPaint2 = new Paint();
         mPaint.setStrokeWidth(5);
         mPaint.setColor(Color.parseColor(mColor));
-        mPaint2.setColor(Color.parseColor("#ffffff"));
+        mPaint2.setColor(Color.parseColor("#FFffffff"));
 //        mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setAntiAlias(true);
         mRandom = new Random();
