@@ -3,17 +3,31 @@ package com.yangshunfa.circleview;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.PopupWindow;
 
 import com.yangshunfa.circleview.moose.WaveView;
 
 public class HomeActivity extends AppCompatActivity {
 
+    private Button btn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        waveAndArcView();
+        btnView();
+//        bezierView();
+//        waveAndArcView();
 //        porterModeView();
 //        constrainLayoutView();
+    }
+
+    private void btnView() {
+        setContentView(R.layout.popup_view);
+    }
+
+    private void bezierView() {
+        setContentView(R.layout.activity_home5);
     }
 
     private void porterModeView() {
